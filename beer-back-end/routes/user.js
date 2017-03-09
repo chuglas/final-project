@@ -10,8 +10,6 @@ router.get("/user", (req, res, next) => {
   // if (err) {
   //   res.status(400).json({ message: err });
   // } else {
-    console.log("reqasdadsads", req.user._id)
-
     return res.json(req.user);
   // }
 });

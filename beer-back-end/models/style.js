@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 const Schema   = mongoose.Schema;
 
 const styleSchema = new Schema({
-  user: { type: Number, ref: 'User' },
-  styleName: {
+  userId: { type: String, ref: 'User' },
+  name: {
     type: String,
-    required: [true, 'Name Required']
+    // required: [true, 'Name Required']
   },
   // description: {
   //   type: String,
   // },
-  brands: [{ type: Schema.Types.ObjectId, ref: 'Brand' }],
-  pairings: [{ type: Schema.Types.ObjectId, ref: 'Pairing' }]
+  styleBrands: [{ type: Schema.Types.ObjectId, ref: 'Brand' }],
+  stylePairings: [{ type: Schema.Types.ObjectId, ref: 'Pairing' }]
 });
 
 const Style = mongoose.model("Style", styleSchema);

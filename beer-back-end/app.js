@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', auth);
 app.use('/api', passport.authenticate('jwt', { session: false }), user);
-app.use('/api/styles', passport.authenticate('jwt', { session: false }), styles);
+app.use('/api/styles', styles);
 
 
 
