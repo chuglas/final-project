@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 const User = require('../models/user');
 const Style = require('../models/style');
-
 var jwt = require('jsonwebtoken');
 var jwtOptions = require('../config/jwtOptions');
+var requestify = require('requestify');
 
 
 /* GET home page. */
@@ -72,6 +72,15 @@ router.post('/test', function(req, res) {
   });
 });
 
+router.get('/api-styles', (req, res, next) => {
+  requestify.get('http://api.brewerydb.com/v2/styles/?key=3de4a6d59df63b4b0b12af0bad45b68c').then(function(response) {
+      // Get the response body (JSON parsed - JSON response or jQuery object in case of XML response)
+      response.getBody();
+      // console.log(response.body);
+      // Get the response raw body
+      return response.body;
+  });
 
+});
 
 module.exports = router;
