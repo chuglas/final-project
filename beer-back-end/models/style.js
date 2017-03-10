@@ -7,9 +7,15 @@ const styleSchema = new Schema({
     type: String,
     // required: [true, 'Name Required']
   },
-  // description: {
-  //   type: String,
-  // },
+  description: {
+    type: String,
+  },
+  color: {
+    type: String,
+  },
+  apiId: {
+    type: String,
+  },
   styleBrands: [{ type: Schema.Types.ObjectId, ref: 'Brand' }],
   stylePairings: [{ type: Schema.Types.ObjectId, ref: 'Pairing' }]
 });

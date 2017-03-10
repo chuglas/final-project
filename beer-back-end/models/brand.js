@@ -2,15 +2,12 @@ const mongoose = require("mongoose");
 const Schema   = mongoose.Schema;
 
 const brandSchema = new Schema({
-  user: { type: Number, ref: 'User' },
-  style: {
-    type: String,
-    required: [true, 'Name Required']
-  },
-  description: {
-    type: String,
-  },
-  rating: Number,
+  user: { type: String, ref: 'User' },
+  style: { type: String, ref: 'Style' },
+  name: { type: String },
+  breweryName: { type: String },
+  description: { type: String },
+  rating: { type: String }
 });
 
 const Brand = mongoose.model("Brand", brandSchema);

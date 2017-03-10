@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 const passport   = require('./config/passport');
 var auth         = require('./routes/auth');
-var user         = require('./routes/user');
 var styles       = require('./routes/styles');
 
 var cors         = require('cors');
@@ -32,8 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', auth);
-app.use('/api', passport.authenticate('jwt', { session: false }), user);
-app.use('/api/styles', styles);
+app.use('/api/styles', passport.authenticate('jwt', { session: false }), styles);
 
 
 

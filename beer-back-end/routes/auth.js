@@ -35,7 +35,7 @@ router.post("/login", function(req, res) {
         } else {
           var payload = {id: user._id};
           var token = jwt.sign(payload, jwtOptions.secretOrKey);
-          console.log("/login user CL:  ", user);
+          // console.log("/login user CL:  ", user);
           res.json({message: "ok", token: token, user: user});
         }
       });

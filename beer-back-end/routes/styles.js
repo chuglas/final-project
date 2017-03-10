@@ -28,6 +28,9 @@ router.post('/',  (req, res, next) => {
   const style = {
     userId: currentUser,
     name: req.body.name,
+    description: req.body.description,
+    color: req.body.color,
+    apiId: req.body.apiId,
     styleBrands: [],
     stylePairings: []
   };
@@ -39,7 +42,7 @@ router.post('/',  (req, res, next) => {
     user.styles.push(userStyle);
     user.save((err)=> {
       userStyle.save((err, styleSaved)=>{
-        console.log("userId :", user)
+        console.log("userId :", user);
         console.log("styleSaved: ", styleSaved);
         if (err) {
           return res.send(err);
@@ -53,34 +56,35 @@ router.post('/',  (req, res, next) => {
   });
 });
 
-
-router.post('/test', function(req, res) {
-  const style = new Style({
-    userId: req.body.userId,
-    name: req.body.name,
-  });
-
-  style.save((err) => {
-    if (err) {
-      return res.send(err);
-    }
-
-    return res.json({
-      message: 'New Style created!',
-      style: style
-    });
-  });
-});
-
 router.get('/api-styles', (req, res, next) => {
+
   requestify.get('http://api.brewerydb.com/v2/styles/?key=3de4a6d59df63b4b0b12af0bad45b68c').then(function(response) {
       // Get the response body (JSON parsed - JSON response or jQuery object in case of XML response)
-      response.getBody();
-      // console.log(response.body);
+      // console.log(response.getBody());
       // Get the response raw body
-      return response.body;
+      return res.json(response.body);
   });
 
 });
+
+
+router.get('/style/:id', (req, res) => {
+
+  var currentUser = req.user._id;
+
+  console.log("usah: ", req.user._id);
+  console.log("styl ", req.params.id);
+
+  Style.findOne({ 'userId': req.user._id, 'apiId': req.params.id }, function (err, style) {
+    if (err) return handleError(err);
+    if (style) {
+      console.log(style);
+      res.json(style);
+    }
+  });
+
+
+});
+
 
 module.exports = router;
