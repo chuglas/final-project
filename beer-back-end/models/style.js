@@ -13,6 +13,9 @@ const styleSchema = new Schema({
   color: {
     type: String,
   },
+  colorNum: {
+    type: Number,
+  },
   apiId: {
     type: String,
   },

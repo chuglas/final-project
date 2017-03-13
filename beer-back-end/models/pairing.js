@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 const Schema   = mongoose.Schema;
 
 const pairingSchema = new Schema({
-  style: { type: Number, ref: 'Style' },
-  dishName: {
-    type: String,
-    required: [true, 'Beer Name Required']
-  },
-  rating: Number
+  user: { type: String, ref: 'User' },
+  style: { type: String, ref: 'Style' },
+  name: { type: String },
+  recipeLink: { type: String },
+  rating: { type: String }
 });
 
 const Pairing = mongoose.model("Pairing", pairingSchema);

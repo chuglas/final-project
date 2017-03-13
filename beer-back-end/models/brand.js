@@ -6,7 +6,7 @@ const brandSchema = new Schema({
   style: { type: String, ref: 'Style' },
   name: { type: String },
   breweryName: { type: String },
-  description: { type: String },
+  tastingNotes: { type: String },
   rating: { type: String }
 });
 

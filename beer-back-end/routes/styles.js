@@ -3,6 +3,7 @@ var router = express.Router();
 const User = require('../models/user');
 const Style = require('../models/style');
 const Brand = require('../models/brand');
+const Pairing = require('../models/pairing');
 
 var jwt = require('jsonwebtoken');
 var jwtOptions = require('../config/jwtOptions');
@@ -35,6 +36,7 @@ router.post('/',  (req, res, next) => {
     name: req.body.name,
     description: req.body.description,
     color: req.body.color,
+    colorNum: req.body.colorNum,
     apiId: req.body.apiId,
     styleBrands: [],
     stylePairings: []
@@ -99,7 +101,9 @@ router.get('/style/:id/brand', (req, res, next) => {
     .exec((err, style)=>{
       if (err) { res.send(err); }
       console.log("hi hi: ", style);
-      return res.json(style.styleBrands);
+      if (style) {
+        return res.json(style.styleBrands);
+      }
   });
 });
 
@@ -121,7 +125,7 @@ router.post('/style/:id/brand',  (req, res, next) => {
       style: style._id,
       name: req.body.name,
       breweryName: req.body.breweryName,
-      description: req.body.description,
+      tastingNotes: req.body.tastingNotes,
       rating: req.body.rating
     };
 
@@ -137,6 +141,90 @@ router.post('/style/:id/brand',  (req, res, next) => {
         return res.json({
           message: 'New Style created!',
           brandSaved: brandSaved
+        });
+      });
+    });
+  });
+
+});
+
+// -----------------------------------------------------------------------------
+// UPDATING A BRAND
+// -----------------------------------------------------------------------------
+
+router.put('/style/:id/brand/:brandId', (req, res) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+
+  Brand.findOneAndUpdate({ 'userId': req.user._id, 'apiId': req.params.id }, {
+    name: req.body.name,
+    breweryName: req.body.breweryName,
+    tastingNotes: req.body.tastingNotes,
+    rating: req.body.rating
+    }, (err) => {
+      if (err) {
+        return res.send(err);
+      }
+
+      return res.json({
+        message: 'Brand updated successfully'
+      });
+    });
+  }
+});
+
+
+// -----------------------------------------------------------------------------
+// GETTING PAIRINGS BY STYLE
+// -----------------------------------------------------------------------------
+
+router.get('/style/:id/pairing', (req, res, next) => {
+  var currentUser = req.user._id;
+
+  Style.findOne({ 'userId': req.user._id, 'apiId': req.params.id })
+    .populate('stylePairings')
+    .exec((err, style)=>{
+      if (err) { res.send(err); }
+      console.log("hi hi: ", style);
+      if (style) {
+        return res.json(style.stylePairings);
+      }  
+  });
+});
+
+
+// -----------------------------------------------------------------------------
+// ADDING A PAIRING TO A STYLE
+// -----------------------------------------------------------------------------
+
+router.post('/style/:id/pairing',  (req, res, next) => {
+
+  var currentUser = req.user._id;
+
+  Style.findOne({ 'userId': req.user._id, 'apiId': req.params.id }, function (err, style) {
+
+    console.log('style found: ', style);
+
+    const pairing = {
+      user: currentUser,
+      style: style._id,
+      name: req.body.name,
+      breweryName: req.body.breweryName,
+      description: req.body.description,
+      rating: req.body.rating
+    };
+
+    console.log('style found: ', style);
+    let stylePairing = new Pairing(pairing);
+    style.stylePairings.push(stylePairing);
+    style.save((err)=> {
+      stylePairing.save((err, pairingSaved)=>{
+        if (err) {
+          return res.send(err);
+        }
+        console.log('pairing saved: ', pairingSaved);
+        return res.json({
+          message: 'New Style created!',
+          pairingSaved: pairingSaved
         });
       });
     });
