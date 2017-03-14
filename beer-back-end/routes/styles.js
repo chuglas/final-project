@@ -100,7 +100,6 @@ router.get('/style/:id/brand', (req, res, next) => {
     .populate('styleBrands')
     .exec((err, style)=>{
       if (err) { res.send(err); }
-      console.log("hi hi: ", style);
       if (style) {
         return res.json(style.styleBrands);
       }
@@ -118,8 +117,6 @@ router.post('/style/:id/brand',  (req, res, next) => {
 
   Style.findOne({ 'userId': req.user._id, 'apiId': req.params.id }, function (err, style) {
 
-    console.log('style found: ', style);
-
     const brand = {
       user: currentUser,
       style: style._id,
@@ -129,7 +126,6 @@ router.post('/style/:id/brand',  (req, res, next) => {
       rating: req.body.rating
     };
 
-    console.log('style found: ', style);
     let styleBrand = new Brand(brand);
     style.styleBrands.push(styleBrand);
     style.save((err)=> {
@@ -153,9 +149,11 @@ router.post('/style/:id/brand',  (req, res, next) => {
 // -----------------------------------------------------------------------------
 
 router.put('/style/:id/brand/:brandId', (req, res) => {
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
 
-  Brand.findOneAndUpdate({ 'userId': req.user._id, 'apiId': req.params.id }, {
+  console.log('dis brandId', req.params.brandId);
+  console.log('dis body: ', req.body)
+
+  Brand.findByIdAndUpdate(req.params.brandId, {
     name: req.body.name,
     breweryName: req.body.breweryName,
     tastingNotes: req.body.tastingNotes,
@@ -164,13 +162,31 @@ router.put('/style/:id/brand/:brandId', (req, res) => {
       if (err) {
         return res.send(err);
       }
-
       return res.json({
         message: 'Brand updated successfully'
       });
     });
-  }
+
 });
+
+
+// -----------------------------------------------------------------------------
+// DELETING A BRAND
+// -----------------------------------------------------------------------------
+router.delete('/style/:id/brand/:brandId', (req, res) => {
+
+  console.log(req.params.id, "& ", req.params.brandId)
+  Brand.remove({ _id: req.params.brandId }, (err) => {
+    if (err) {
+      return res.send(err);
+    }
+
+    return res.json({
+      message: 'Phone has been removed!'
+    });
+  })
+});
+
 
 
 // -----------------------------------------------------------------------------
@@ -184,10 +200,9 @@ router.get('/style/:id/pairing', (req, res, next) => {
     .populate('stylePairings')
     .exec((err, style)=>{
       if (err) { res.send(err); }
-      console.log("hi hi: ", style);
       if (style) {
         return res.json(style.stylePairings);
-      }  
+      }
   });
 });
 
