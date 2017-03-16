@@ -51,6 +51,7 @@ router.post('/',  (req, res, next) => {
     user.styles.push(userStyle);
     user.save((err)=> {
       userStyle.save((err, styleSaved)=>{
+        // IF THIS STYLE IS ALREADY IN LIST - DON'T ADD IT
         if (err) {
           return res.send(err);
         }
@@ -58,6 +59,7 @@ router.post('/',  (req, res, next) => {
           message: 'New Style created!',
           styleSaved: styleSaved
         });
+
       });
     });
   });
