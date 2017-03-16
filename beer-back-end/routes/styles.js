@@ -31,6 +31,10 @@ router.post('/',  (req, res, next) => {
 
   var currentUser = req.user._id;
 
+  if (req.body.colorNum === null) {
+    req.body.colorNum = 0;
+  }
+
   const style = {
     userId: currentUser,
     name: req.body.name,
@@ -151,7 +155,7 @@ router.post('/style/:id/brand',  (req, res, next) => {
 router.put('/style/:id/brand/:brandId', (req, res) => {
 
   console.log('dis brandId', req.params.brandId);
-  console.log('dis body: ', req.body)
+  console.log('dis body: ', req.body);
 
   Brand.findByIdAndUpdate(req.params.brandId, {
     name: req.body.name,
@@ -175,7 +179,7 @@ router.put('/style/:id/brand/:brandId', (req, res) => {
 // -----------------------------------------------------------------------------
 router.delete('/style/:id/brand/:brandId', (req, res) => {
 
-  console.log(req.params.id, "& ", req.params.brandId)
+  console.log(req.params.id, "& ", req.params.brandId);
   Brand.remove({ _id: req.params.brandId }, (err) => {
     if (err) {
       return res.send(err);
@@ -184,7 +188,7 @@ router.delete('/style/:id/brand/:brandId', (req, res) => {
     return res.json({
       message: 'Phone has been removed!'
     });
-  })
+  });
 });
 
 
@@ -223,8 +227,8 @@ router.post('/style/:id/pairing',  (req, res, next) => {
       user: currentUser,
       style: style._id,
       name: req.body.name,
-      breweryName: req.body.breweryName,
-      description: req.body.description,
+      recipeLink: req.body.recipeLink,
+      tastingNotes: req.body.tastingNotes,
       rating: req.body.rating
     };
 
@@ -247,7 +251,48 @@ router.post('/style/:id/pairing',  (req, res, next) => {
 
 });
 
+// -----------------------------------------------------------------------------
+// UPDATING A PAIRING
+// -----------------------------------------------------------------------------
 
+router.put('/style/:id/pairing/:pairingId', (req, res) => {
+
+  console.log('dis pairingId', req.params.pairingId);
+  console.log('dis body: ', req.body);
+
+  Pairing.findByIdAndUpdate(req.params.pairingId, {
+    name: req.body.name,
+    recipeLink: req.body.recipeLink,
+    tastingNotes: req.body.tastingNotes,
+    rating: req.body.rating
+    }, (err) => {
+      if (err) {
+        return res.send(err);
+      }
+      return res.json({
+        message: 'Brand updated successfully'
+      });
+    });
+
+});
+
+
+// -----------------------------------------------------------------------------
+// DELETING A BRAND
+// -----------------------------------------------------------------------------
+router.delete('/style/:id/pairing/:pairingId', (req, res) => {
+
+  console.log(req.params.id, "& ", req.params.pairingId);
+  Pairing.remove({ _id: req.params.pairingId }, (err) => {
+    if (err) {
+      return res.send(err);
+    }
+
+    return res.json({
+      message: 'Pairing has been removed!'
+    });
+  });
+});
 
 
 module.exports = router;

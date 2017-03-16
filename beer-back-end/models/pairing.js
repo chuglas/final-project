@@ -6,6 +6,7 @@ const pairingSchema = new Schema({
   style: { type: String, ref: 'Style' },
   name: { type: String },
   recipeLink: { type: String },
+  tastingNotes: { type: String },
   rating: { type: String }
 });
 
