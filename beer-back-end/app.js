@@ -13,7 +13,7 @@ var cors         = require('cors');
 require('./config/database');
 var app = express();
 
-var corsOptions = {credentials: true, origin: 'http://localhost:4200'};
+var corsOptions = {credentials: true, origin: 'https://chuglog.herokuapp.com/'};
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
